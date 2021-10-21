@@ -1,0 +1,113 @@
+
+#include <stdio.h>
+#include <string.h>
+#include <math.h>
+#include <stdlib.h>
+
+
+struct node {
+    int key;
+    struct node *left, *right;
+};
+ 
+
+void printCurrentLevel(struct node* root, int level);
+int height(struct node* node);
+struct node* newNode(int data);
+
+struct node* newNode(int item)
+{
+    struct node* temp
+        = (struct node*)malloc(sizeof(struct node));
+    temp->key = item;
+    temp->left = temp->right = NULL;
+    return temp;
+}
+ 
+// A utility function to do inorder traversal of BST
+void inorder(struct node* root)
+{
+    if (root != NULL) {
+        printf("%d ", root->key);
+        inorder(root->left);
+        inorder(root->right);
+    }
+}
+ 
+
+struct node* insert(struct node* node, int key)
+{
+    if (node == NULL)
+        return newNode(key);
+ 
+    if (key % 4==0)
+        node->left = insert(node->left, key);
+    else 
+        node->right = insert(node->right, key);
+    return node;
+}
+
+void printLevelOrder(struct node* root)
+{
+    int h = height(root);
+    int i;
+    for (i = 1; i <= h; i++)
+        printCurrentLevel(root, i);
+}
+
+void printCurrentLevel(struct node* root, int level)
+{
+    if (root == NULL)
+        return;
+    if (level == 1)
+        printf("%d ", root->key);
+    else if (level > 1) {
+        printCurrentLevel(root->left, level - 1);
+        printCurrentLevel(root->right, level - 1);
+    }
+}
+ 
+ 
+int height(struct node* node)
+{
+    if (node == NULL)
+        return 0;
+    else {
+        /* compute the height of each subtree */
+        int lheight = height(node->left);
+        int rheight = height(node->right);
+ 
+        /* use the larger one */
+        if (lheight > rheight)
+            return (lheight + 1);
+        else
+            return (rheight + 1);
+    }
+}
+
+int main() {
+    
+int i,number,inp,T,j;
+     struct node* root = NULL;
+    
+    scanf("%d",&T);
+
+    for(i=0;i<T;i++){
+    scanf("%d",&inp);
+    for(j=0;j<inp;j++){
+    scanf("%d",&number);
+        if(root==NULL){
+    root = insert(root, number);            
+        }
+        else
+    insert(root, number);
+    }
+            printLevelOrder(root);
+
+        // inorder(root);
+            root = NULL;            
+        printf("\n");
+        
+    }
+    return 0;
+}
